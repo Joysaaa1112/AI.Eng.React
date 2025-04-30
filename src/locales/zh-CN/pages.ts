@@ -1,5 +1,5 @@
 export default {
-  'pages.layouts.userLayout.title': 'AI.Eng 是西湖区最具影响力的 Web 设计规范',
+  'pages.layouts.userLayout.title': 'AI.Eng 由谭工治模团队与北京大学生命科学华东院联合开发',
   'pages.login.accountLogin.tab': '账户密码登录',
   'pages.login.accountLogin.errorMessage': '错误的用户名和密码(admin/ant.design)',
   'pages.login.failure': '登录失败，请重试！',
@@ -64,4 +64,11 @@ export default {
   'pages.searchTable.tenThousand': '万',
   'pages.searchTable.batchDeletion': '批量删除',
   'pages.searchTable.batchApproval': '批量审批',
+  'pages.hub.search.technologyType': '技术类型',
+  'pages.hub.search.types.all': '全部',
+  'pages.hub.search.types.machining': 'CNC机加工',
+  'pages.hub.search.types.3dPrinting': '3D打印',
+  'pages.hub.search.types.injectionMolding': '注塑成型',
+  'pages.hub.hubCard.btn1': '接单',
+  'pages.hub.hubCard.btn2': '查看详情',
 };

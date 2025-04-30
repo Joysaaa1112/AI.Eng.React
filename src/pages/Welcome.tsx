@@ -89,9 +89,7 @@ const Welcome: React.FC = () => {
   return (
     <PageContainer>
       <Card
-        style={{
-          borderRadius: 8,
-        }}
+        variant="borderless"
         styles={{
           body: {
             backgroundImage:
@@ -131,7 +129,7 @@ const Welcome: React.FC = () => {
             <p>尊敬的供应商／工厂伙伴，欢迎加入我们的智能制造协作平台！</p>
             <p>
               在这里，
-              您可以快速、精准的核算加工成本，获得加工G代码。您自定义各项利润率、加工单价等参数且生成PDF报告，助力您更高效的管理工厂。
+              您可以快速、精准的核算加工成本，获得加工G代码。您也可以自定义各项利润率、加工单价等参数且生成PDF报告，助力您更高效的管理工厂。
             </p>
             <p>
               若启用接单功能，请遵循平台统一报价及定价规则，共同打造规范、高效、共赢的合作生态。

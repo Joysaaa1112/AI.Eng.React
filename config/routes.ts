@@ -31,7 +31,7 @@ export default [
   {
     path: '/hub',
     name: 'hub',
-    icon: 'smile',
+    icon: 'global',
     component: './hub/index',
   },
   {

@@ -1,13 +1,14 @@
-import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
+import { AvatarDropdown, AvatarName, Footer, HubSwitch, SelectLang } from '@/components';
+import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
 import { LinkOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
+import React from 'react';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
-import React from 'react';
+import token from './utils/token';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -19,6 +20,7 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  hubMode?: boolean;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -39,6 +41,7 @@ export async function getInitialState(): Promise<{
       fetchUserInfo,
       currentUser,
       settings: defaultSettings as Partial<LayoutSettings>,
+      hubMode: false,
     };
   }
   return {
@@ -47,10 +50,42 @@ export async function getInitialState(): Promise<{
   };
 }
 
+const HeaderHubSwitch: React.FC<{
+  initialChecked: boolean;
+  onModeChange?: (val: boolean) => void;
+}> = ({ initialChecked, onModeChange }) => {
+  const [hubMode, setHubMode] = React.useState<boolean>(initialChecked);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const handleChange = (val: boolean) => {
+    setLoading(true);
+    setHubMode(val);
+    onModeChange?.(val);
+    console.log('HubSwitch', val);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
+  return <HubSwitch checked={hubMode} onChange={handleChange} loading={loading} />;
+};
+
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
-    actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
+    headerContentRender: () => {
+      return (
+        <HeaderHubSwitch
+          initialChecked={initialState?.hubMode ?? false}
+          onModeChange={(val) => {
+            setInitialState((prev) => ({
+              ...prev,
+              hubMode: val,
+            }));
+          }}
+        />
+      );
+    },
+    actionsRender: () => [<SelectLang key="SelectLang" />],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
@@ -133,4 +168,21 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
  */
 export const request = {
   ...errorConfig,
+  // 请求拦截器
+  requestInterceptors: [
+    (url: string, options: any) => {
+      const t = token.get();
+      const authHeader = t ? { Authorization: `Bearer ${t}` } : {};
+      return {
+        url, // 你可以修改 url，如加上 API 前缀
+        options: {
+          ...options,
+          headers: {
+            ...options.headers,
+            ...authHeader,
+          },
+        },
+      };
+    },
+  ],
 };
